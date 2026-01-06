@@ -19,6 +19,9 @@ switch ($action) {
         $controller->login();
         break;
 
+    case 'logout':
+        $controller -> logout();
+
     default:
         header('Location: ../auth/register.php');
         exit;
@@ -89,5 +92,14 @@ class AuthController
             header('Location: ../auth/login.php');
             exit;
         }
+    }
+
+    ///logout
+    public function logout(): void
+    {
+        SecurityService::logout();
+
+        header("Location: ../auth/login.php");
+        exit;
     }
 }
