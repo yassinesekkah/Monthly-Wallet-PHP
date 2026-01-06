@@ -31,6 +31,15 @@ class SecurityService
         session_regenerate_id(true);
     }
 
+    ///logout
+    public static function logout(): void
+    {
+        session_unset();
+        session_destroy();
+
+        session_regenerate_id(true);
+    }
+
     // Nettoie une chaîne contre les attaques XSS
 
     public static function clean($data)
@@ -87,7 +96,6 @@ class SecurityService
         }
     }
 
-    // Redirige si non enseignant
 
 
 }
