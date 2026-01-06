@@ -36,7 +36,7 @@ class UserRepository
     ///find by email method
     public function findByEmail(string $email): array|false
     {
-        $sql = "SELECT id, email, password FROM users WHERE email = :email";
+        $sql = "SELECT id, name, email, password FROM users WHERE email = :email";
         $stmt = $this -> db -> prepare ($sql);
         $stmt -> execute (['email' => $email]);
         $result = $stmt -> fetch();

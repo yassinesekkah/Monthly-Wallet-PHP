@@ -28,7 +28,8 @@ switch ($action) {
 }
 
 class AuthController
-{
+{   
+    ///register
     public function register(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -83,6 +84,7 @@ class AuthController
         try {
             $authService = new AuthService();
             $user = $authService->login($email, $password);
+            
             SecurityService::loginUser($user);
 
             header("Location: ../dashboard.php");
