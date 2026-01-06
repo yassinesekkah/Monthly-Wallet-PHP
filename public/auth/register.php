@@ -3,6 +3,10 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once '../../config/database.php';
 
+use App\Service\SecurityService;
+
+$csrfToken = SecurityService::generateCSRFToken();
+
 // Récupérer les messages d'erreur
 $error = $_SESSION['register_error'] ?? '';
 unset($_SESSION['register_error']);
@@ -12,14 +16,14 @@ unset($_SESSION['register_error']);
 
 <body class="bg-gradient-to-br from-indigo-600 to-purple-700 min-h-screen flex items-center justify-center py-12">
     <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-<!-- Logo Card -->
-<div class="text-center mb-8">
-    <div class="mx-auto w-16 h-16 flex items-center justify-center rounded-xl bg-indigo-100 mb-4">
-        <i class="fas fa-credit-card text-3xl text-indigo-600"></i>
-    </div>
-    <h1 class="text-3xl font-bold text-gray-900">Créer un compte</h1>
-    <p class="text-gray-600 mt-2">Votre wallet personnel en ligne</p>
-</div>
+        <!-- Logo Card -->
+        <div class="text-center mb-8">
+            <div class="mx-auto w-16 h-16 flex items-center justify-center rounded-xl bg-indigo-100 mb-4">
+                <i class="fas fa-credit-card text-3xl text-indigo-600"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900">Créer un compte</h1>
+            <p class="text-gray-600 mt-2">Votre wallet personnel en ligne</p>
+        </div>
 
         <!-- Message d'erreur -->
         <?php if ($error): ?>
@@ -35,6 +39,8 @@ unset($_SESSION['register_error']);
 
                 <!-- Form -->
                 <form method="POST" action="../controllers/AuthController.php?action=register" class="space-y-2">
+                    <!-- csrf tokken -->
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
 
                     <!-- Name -->
                     <div>

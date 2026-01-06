@@ -37,6 +37,25 @@ class AuthService
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         /// create new utilisateur f repository
         $this -> userRepository -> create($name, $email, $hashedPassword);
+    }
+    
+    ///login
+    public function login(string $email, string $password): array
+    {   ///empty input no valide
+        if(empty($email) || empty($password)){
+            throw new Exception ("ous les champs sont obligatoires");
+        }
+        ///search user par email
+        $user = $this -> userRepository -> findByEmail($email);
 
+        if(!$user){
+            throw new Exception ("Email ou mot de passe incorrect");
+        }
+
+        if(!password_verify($password, $user['password'])){
+            throw new Exception ("Email ou mot de passe incorrect");
+        }
+
+        return $user;
     }
 }
