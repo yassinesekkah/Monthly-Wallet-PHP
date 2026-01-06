@@ -1,0 +1,9 @@
+{
+    "name": "youcode/monthly-wallet",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
