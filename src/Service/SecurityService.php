@@ -27,6 +27,16 @@ class SecurityService
     {
         $_SESSION['user_id']    = $user['id'];
         $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_name'] = $user['name'];
+
+        session_regenerate_id(true);
+    }
+
+    ///logout
+    public static function logout(): void
+    {
+        session_unset();
+        session_destroy();
 
         session_regenerate_id(true);
     }
@@ -70,24 +80,20 @@ class SecurityService
     }
 
     // Vérifie si l'utilisateur est connecté
-
     public static function isLoggedIn()
     {
-        return isset($_SESSION['user_id']) && isset($_SESSION['user_role']);
+        return isset($_SESSION['user_id']);
     }
 
-
     // Redirige si non connecté
-
     public static function requireLogin()
     {
         if (!self::isLoggedIn()) {
-            header('Location: ../auth/login.php');
+            header('Location: /Monthly-Wallet-PHP/public/auth/login.php');
             exit();
         }
     }
 
-    // Redirige si non enseignant
 
 
 }
