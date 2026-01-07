@@ -3,16 +3,19 @@ namespace App\Service;
 
 use Exception;
 use App\Repository\UserRepository;
+use App\Service\WalletService;
 
 class AuthService
 {   private UserRepository $userRepository;
+    private WalletService $walletService;
 
     public function __construct()
     {
         $this -> userRepository = new UserRepository;
+        $this -> walletService = new WalletService;
     }
     ///Register
-    public function register($name, $email, $password)
+    public function register(string $name, string $email, string $password): void
     {   ///not empty input valide
         if(empty($name) || empty($email)|| empty($password)){
             throw new Exception ("Tous les champs sont obligatoires");
@@ -36,7 +39,9 @@ class AuthService
         /// hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         /// create new utilisateur f repository
-        $this -> userRepository -> create($name, $email, $hashedPassword);
+        $userId = $this -> userRepository -> create($name, $email, $hashedPassword);
+        //// create wallet pour ce utilisateur
+        $this -> walletService -> createCurrentWalletForUser ($userId);
     }
     
     ///login

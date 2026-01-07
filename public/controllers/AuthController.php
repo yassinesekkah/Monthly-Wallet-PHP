@@ -5,7 +5,6 @@ require_once __DIR__ . '/../../config/database.php';
 use App\Service\AuthService;
 use App\Service\SecurityService;
 
-
 $action = $_GET['action'] ?? null;
 
 $controller = new AuthController();
