@@ -59,6 +59,7 @@ class AuthController
             header('Location: ../auth/register.php');
             exit;
         }
+
     }
     ///login controller
     public function login(): void
