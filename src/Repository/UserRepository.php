@@ -22,7 +22,7 @@ class UserRepository
         return (bool) $stmt -> fetchColumn();
     }
     ///creation dyal new user
-    public function create($name, $email, $password)
+    public function create($name, $email, $password): int
     {
         $sql = "INSERT INTO users (name, email, password)
                 VALUES (:name, :email, :password)";
@@ -32,6 +32,8 @@ class UserRepository
             "email" => $email,
             "password" => $password
         ]);
+        $userId = $this->db->lastInsertId();
+        return (int) $userId;
     }
     ///find by email method
     public function findByEmail(string $email): array|false
