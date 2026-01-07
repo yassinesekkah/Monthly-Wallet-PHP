@@ -43,20 +43,22 @@ unset($_SESSION['budget_error']);
         </div>
     </div>
 </section>
-
-<!-- Message d'erreur -->
-        <?php if ($error): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                <i class="fas fa-exclamation-circle mr-2"></i><?= htmlspecialchars($error) ?>
+<!-- Message after edit budget action  -->
+ <?php if ($error || $success): ?>
+        <div
+            id="toast"
+            class="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl shadow-lg text-sm font-semibold
+        <?= $error
+            ? 'bg-red-100 text-red-700 border border-red-300'
+            : 'bg-green-100 text-green-700 border border-green-300' ?>">
+            <div class="flex items-center gap-2">
+                <i class="fas <?= $error ? 'fa-circle-xmark' : 'fa-circle-check' ?>"></i>
+                <span>
+                    <?= $error ? htmlspecialchars($error) : htmlspecialchars($success) ?>
+                </span>
             </div>
-        <?php endif; ?>
-
-        <!-- Message d'erreur -->
-        <?php if ($success): ?>
-            <div class="bg-green-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                <i class="fas fa-exclamation-circle mr-2"></i><?= htmlspecialchars($success) ?>
-            </div>
-        <?php endif; ?>
+        </div>
+    <?php endif; ?>
 
 <!-- Stats Cards -->
 <section class="max-w-7xl mx-auto px-6 mt-10">
@@ -203,6 +205,13 @@ unset($_SESSION['budget_error']);
 
     function closeBudgetModal() {
         document.getElementById('budgetModal').classList.add('hidden');
+    }
+    const toast = document.getElementById('toast');
+    if (toast) {
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'transition', 'duration-500');
+            setTimeout(() => toast.remove(), 500);
+        }, 3000);
     }
 </script>
 
