@@ -3,6 +3,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once '../config/database.php';
 
 use App\Service\SecurityService;
+use App\Service\WalletService;
 
 SecurityService::requireLogin();
 
@@ -14,6 +15,12 @@ unset($_SESSION['budget_success']);
 
 $error = $_SESSION['budget_error'] ?? '';
 unset($_SESSION['budget_error']);
+
+///summary
+$userId = $_SESSION['user_id'];
+$walletService = new WalletService;
+$summary = $walletService -> getMonthlySummary($userId);
+// array(3) { ["budget"]=> string(7) "1000.00" ["totalExpenses"]=> int(0) ["remaining"]=> float(1000) }
 ?>
 
 <?php include "partials/header.php"; ?>
@@ -72,7 +79,7 @@ unset($_SESSION['budget_error']);
                 <!-- Budget info -->
                 <div>
                     <p class="text-sm text-gray-500">Budget mensuel</p>
-                    <p class="text-3xl font-bold text-gray-800 mt-2">3000 MAD</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-2"><?= $summary['budget']; ?> MAD</p>
                     <i class="fas fa-coins text-green-500 text-xl mt-4"></i>
                 </div>
 
@@ -92,7 +99,7 @@ unset($_SESSION['budget_error']);
             <div class="absolute top-0 right-0 w-24 h-24 bg-red-100 rounded-full -mr-10 -mt-10"></div>
             <div class="relative">
                 <p class="text-sm text-gray-500">Total dépensé</p>
-                <p class="text-3xl font-bold text-gray-800 mt-2">1750 MAD</p>
+                <p class="text-3xl font-bold text-gray-800 mt-2"><?= $summary['totalExpenses']; ?> MAD</p>
                 <i class="fas fa-arrow-down text-red-500 text-xl mt-4"></i>
             </div>
         </div>
@@ -102,7 +109,7 @@ unset($_SESSION['budget_error']);
             <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-full -mr-10 -mt-10"></div>
             <div class="relative">
                 <p class="text-sm text-gray-500">Solde restant</p>
-                <p class="text-3xl font-bold text-gray-800 mt-2">1250 MAD</p>
+                <p class="text-3xl font-bold text-gray-800 mt-2"><?= $summary['remaining']; ?> MAD</p>
                 <i class="fas fa-wallet text-blue-500 text-xl mt-4"></i>
             </div>
         </div>
@@ -175,7 +182,7 @@ unset($_SESSION['budget_error']);
                     type="number"
                     name="budget"
                     min="1"
-                    step="1"
+                    step="0.1"
                     required
                     class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
                     placeholder="Ex: 3000">
