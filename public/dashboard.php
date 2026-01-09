@@ -20,7 +20,6 @@ unset($_SESSION['budget_error']);
 $userId = $_SESSION['user_id'];
 $walletService = new WalletService;
 $summary = $walletService -> getMonthlySummary($userId);
-// array(3) { ["budget"]=> string(7) "1000.00" ["totalExpenses"]=> int(0) ["remaining"]=> float(1000) }
 ?>
 
 <?php include "partials/header.php"; ?>
@@ -43,8 +42,8 @@ $summary = $walletService -> getMonthlySummary($userId);
                 class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition">
                 Voir mon wallet
             </a>
-            <a href="wallet.php#add"
-                class="bg-gray-800 text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition">
+            <a  onclick= openExpenseModal()
+                class="bg-gray-800 text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition cursor-pointer">
                 Ajouter une dépense
             </a>
         </div>
@@ -205,6 +204,111 @@ $summary = $walletService -> getMonthlySummary($userId);
     </div>
 </div>
 
+<!-- Modal Ajouter Dépense -->
+<div id="expenseModal"
+     class="fixed inset-0 bg-black/40 flex items-center justify-center hidden z-50">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+
+        <!-- Close -->
+        <button onclick="closeExpenseModal()"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Title -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">
+            Ajouter une dépense
+        </h2>
+        <p class="text-sm text-gray-500 mb-6">
+            Enregistrez une nouvelle dépense pour ce mois
+        </p>
+
+        <!-- Form -->
+        <form method="POST"
+              action="controllers/DepenseController.php?action=store"
+              class="space-y-4">
+
+            <!-- CSRF token -->
+            <input type="hidden" name="csrf_token"
+                   value="<?= htmlspecialchars(\App\Service\SecurityService::generateCSRFToken()) ?>">
+
+            <!-- Titre -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Titre
+                </label>
+                <input
+                    type="text"
+                    name="title"
+                    required
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                    placeholder="Ex: Courses Carrefour">
+            </div>
+
+            <!-- Montant -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Montant (MAD)
+                </label>
+                <input
+                    type="number"
+                    name="amount"
+                    min="1"
+                    step="0.01"
+                    required
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                    placeholder="Ex: 150">
+            </div>
+
+            <!-- Catégorie -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Catégorie
+                </label>
+                <select
+                    name="category_id"
+                    required
+                    class="w-full px-4 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-green-500 focus:outline-none">
+                    <option value="">-- Choisir une catégorie --</option>
+                    <option value="1">Nourriture</option>
+                    <option value="2">Transport</option>
+                    <option value="3">Loyer</option>
+                    <option value="4">Loisirs</option>
+                    <option value="5">Autre</option>
+                </select>
+            </div>
+
+            <!-- Date -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Date
+                </label>
+                <input
+                    type="date"
+                    name="date"
+                    required
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none">
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button"
+                        onclick="closeExpenseModal()"
+                        class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100">
+                    Annuler
+                </button>
+
+                <button type="submit" 
+                        class="px-5 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition">
+                    Ajouter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script>
     function openBudgetModal() {
         document.getElementById('budgetModal').classList.remove('hidden');
@@ -213,6 +317,7 @@ $summary = $walletService -> getMonthlySummary($userId);
     function closeBudgetModal() {
         document.getElementById('budgetModal').classList.add('hidden');
     }
+
     const toast = document.getElementById('toast');
     if (toast) {
         setTimeout(() => {
@@ -220,6 +325,16 @@ $summary = $walletService -> getMonthlySummary($userId);
             setTimeout(() => toast.remove(), 500);
         }, 3000);
     }
+
+    function openExpenseModal() {
+        document.getElementById('expenseModal').classList.remove('hidden');
+    }
+
+    function closeExpenseModal() {
+        document.getElementById('expenseModal').classList.add('hidden');
+    }
+
+
 </script>
 
 </body>
