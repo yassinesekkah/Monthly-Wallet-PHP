@@ -71,4 +71,21 @@ class WalletService
             'remaining' => $remaining
         ];
     }
+
+    public function getCurrentWallet(int $userId)
+    {
+        $month = (int) date('m');
+        $year = (int) date('Y');
+
+        $wallet = $this->walletRepository->findByUserMonthYear($userId, $month, $year);
+
+        if(!$wallet){
+            throw new Exception("Wallet introuvable pour le mois en cours");
+        }
+
+        return $wallet;
+
+    }
+    
 }
+
