@@ -16,10 +16,17 @@ unset($_SESSION['budget_success']);
 $error = $_SESSION['budget_error'] ?? '';
 unset($_SESSION['budget_error']);
 
+$depenseSuccess = $_SESSION['depense_success'] ?? '';
+unset($_SESSION['depense_success']);
+
+$depenseError = $_SESSION['depense_error'] ?? '';
+unset($_SESSION['depense_error']);
+
+
 ///summary
 $userId = $_SESSION['user_id'];
 $walletService = new WalletService;
-$summary = $walletService -> getMonthlySummary($userId);
+$summary = $walletService->getMonthlySummary($userId);
 ?>
 
 <?php include "partials/header.php"; ?>
@@ -42,7 +49,7 @@ $summary = $walletService -> getMonthlySummary($userId);
                 class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition">
                 Voir mon wallet
             </a>
-            <a  onclick= openExpenseModal()
+            <a onclick=openExpenseModal()
                 class="bg-gray-800 text-white px-6 py-3 rounded-xl hover:bg-gray-900 transition cursor-pointer">
                 Ajouter une dépense
             </a>
@@ -50,21 +57,40 @@ $summary = $walletService -> getMonthlySummary($userId);
     </div>
 </section>
 <!-- Message after edit budget action  -->
- <?php if ($error || $success): ?>
-        <div
-            id="toast"
-            class="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl shadow-lg text-sm font-semibold
+<?php if ($error || $success): ?>
+    <div
+        id="toast"
+        class="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl shadow-lg text-sm font-semibold
         <?= $error
             ? 'bg-red-100 text-red-700 border border-red-300'
             : 'bg-green-100 text-green-700 border border-green-300' ?>">
-            <div class="flex items-center gap-2">
-                <i class="fas <?= $error ? 'fa-circle-xmark' : 'fa-circle-check' ?>"></i>
-                <span>
-                    <?= $error ? htmlspecialchars($error) : htmlspecialchars($success) ?>
-                </span>
-            </div>
+        <div class="flex items-center gap-2">
+            <i class="fas <?= $error ? 'fa-circle-xmark' : 'fa-circle-check' ?>"></i>
+            <span>
+                <?= $error ? htmlspecialchars($error) : htmlspecialchars($success) ?>
+            </span>
         </div>
-    <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($depenseError || $depenseSuccess): ?>
+    <div
+        id="depenseToast"
+        class="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl shadow-lg text-sm font-semibold
+        <?= $depenseError
+            ? 'bg-red-100 text-red-700 border border-red-300'
+            : 'bg-green-100 text-green-700 border border-green-300' ?>">
+        <div class="flex items-center gap-2">
+            <i class="fas <?= $depenseError ? 'fa-circle-xmark' : 'fa-circle-check' ?>"></i>
+            <span>
+                <?= $depenseError
+                    ? htmlspecialchars($depenseError)
+                    : htmlspecialchars($depenseSuccess) ?>
+            </span>
+        </div>
+    </div>
+<?php endif; ?>
+
 
 <!-- Stats Cards -->
 <section class="max-w-7xl mx-auto px-6 mt-10">
@@ -206,13 +232,13 @@ $summary = $walletService -> getMonthlySummary($userId);
 
 <!-- Modal Ajouter Dépense -->
 <div id="expenseModal"
-     class="fixed inset-0 bg-black/40 flex items-center justify-center hidden z-50">
+    class="fixed inset-0 bg-black/40 flex items-center justify-center hidden z-50">
 
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
 
         <!-- Close -->
         <button onclick="closeExpenseModal()"
-                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
             <i class="fas fa-times"></i>
         </button>
 
@@ -226,12 +252,12 @@ $summary = $walletService -> getMonthlySummary($userId);
 
         <!-- Form -->
         <form method="POST"
-              action="controllers/DepenseController.php?action=store"
-              class="space-y-4">
+            action="controllers/DepenseController.php?action=store"
+            class="space-y-4">
 
             <!-- CSRF token -->
             <input type="hidden" name="csrf_token"
-                   value="<?= htmlspecialchars(\App\Service\SecurityService::generateCSRFToken()) ?>">
+                value="<?= htmlspecialchars(\App\Service\SecurityService::generateCSRFToken()) ?>">
 
             <!-- Titre -->
             <div>
@@ -294,13 +320,13 @@ $summary = $walletService -> getMonthlySummary($userId);
             <!-- Actions -->
             <div class="flex justify-end gap-3 pt-4">
                 <button type="button"
-                        onclick="closeExpenseModal()"
-                        class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100">
+                    onclick="closeExpenseModal()"
+                    class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100">
                     Annuler
                 </button>
 
-                <button type="submit" 
-                        class="px-5 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition">
+                <button type="submit"
+                    class="px-5 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition">
                     Ajouter
                 </button>
             </div>
@@ -334,7 +360,13 @@ $summary = $walletService -> getMonthlySummary($userId);
         document.getElementById('expenseModal').classList.add('hidden');
     }
 
-
+    const depenseToast = document.getElementById('depenseToast');
+    if (depenseToast) {
+        setTimeout(() => {
+            depenseToast.classList.add('opacity-0', 'transition', 'duration-500');
+            setTimeout(() => depenseToast.remove(), 500);
+        }, 3000);
+    }
 </script>
 
 </body>
