@@ -47,11 +47,17 @@ class DepenseController
         $date = trim($_POST['date'] ?? '');
         $userId = $_SESSION['user_id'];
 
-        // try{
-        //     $depenseService = new DepenseService;
-        // }
-        // catch(){
-
-        // }
+        try{
+            $depenseService = new DepenseService;
+            $depenseService -> createExpense($userId, $title, $amount, $category_id, $date);
+            $_SESSION['depense_success'] = " Dépense ajoutée avec succès";
+            header("Location: ../dashboard.php");
+            exit;
+        }
+        catch(Exception $e){
+             $_SESSION['depense_error'] = $e->getMessage();
+            header("Location: ../dashboard.php");
+            exit;
+        }
     }
 }
