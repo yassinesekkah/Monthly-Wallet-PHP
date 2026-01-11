@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#22c55e"/>
+
+  <!-- Wallet icon -->
+  <path
+    d="M18 22h28c2.2 0 4 1.8 4 4v12c0 2.2-1.8 4-4 4H18c-2.2 0-4-1.8-4-4V26c0-2.2 1.8-4 4-4z"
+    fill="#ffffff"
+  />
+
+  <!-- Wallet pocket -->
+  <circle cx="42" cy="32" r="2" fill="#22c55e"/>
+</svg>
